@@ -7,12 +7,8 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from env import scopes
 from env import sample_spreadsheet_ID
+from env import communities
 from fuzzywuzzy import process
-
-sample_range_name_of_programming_circle = "Кружок Программирования"
-sample_range_name_of_student_scientific_society = "Студенческое научное общество"
-sample_range_name_of_curators = "Кураторы ИАТЭ НИЯУ МИФИ"
-sample_range_name_of_council_of_dormitories = "Совет общежитий (СО)"
 
 
 def read_google_sheets(name_of_sheet):
@@ -59,9 +55,16 @@ def read_google_sheets(name_of_sheet):
 
 def understand_question(dictionary, user_question):
     questions = list(dictionary.keys())
-    appropriate_question = process.extractOne(user_question, questions)
-    if appropriate_question[1] > 50:
-        answer = dictionary[appropriate_question[0]]
+    appropriate_question,score = process.extractOne(user_question, questions)
+    if score <= 50:
+        answer = None
     else:
-        answer = "Извините, мы не можем найти что-то похожее на ваш вопрос."
+        answer = dictionary[appropriate_question]
     return answer
+
+
+def choose_community(user_community):
+    community, score = process.extractOne(user_community, communities)
+    if score <= 50:
+        community = None
+    return community
