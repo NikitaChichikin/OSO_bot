@@ -10,7 +10,6 @@ from env import sample_spreadsheet_ID
 from env import communities
 from fuzzywuzzy import process
 
-
 def read_google_sheets(name_of_sheet):
     sample_range_name = name_of_sheet + "!A2:B50"
     connected = False
